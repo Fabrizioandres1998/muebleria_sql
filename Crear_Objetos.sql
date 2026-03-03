@@ -242,3 +242,33 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+DROP TRIGGER IF EXISTS tg_actualizar_stock_venta;
+
+DELIMITER $$
+
+CREATE TRIGGER tg_actualizar_stock_venta
+AFTER INSERT ON detalle_venta
+FOR EACH ROW
+BEGIN
+    UPDATE producto 
+    SET stock = stock - NEW.cantidad
+    WHERE id_producto = NEW.id_producto;
+END $$
+
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS tg_actualizar_stock_compra;
+
+DELIMITER $$
+
+CREATE TRIGGER tg_actualizar_stock_compra
+AFTER INSERT ON detalle_compra
+FOR EACH ROW
+BEGIN
+    UPDATE producto 
+    SET stock = stock + NEW.cantidad
+    WHERE id_producto = NEW.id_producto;
+END $$
+
+DELIMITER ;
